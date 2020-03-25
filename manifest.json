@@ -3,8 +3,8 @@
   "name": "React Push Client",
   "icons": [
     {
-      "src": "favicon_256x256.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "src": "favicon256x256.ico",
+      "sizes": "256x256 128x128 64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
@@ -22,6 +22,7 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "orientation": "portrait",
+  "theme_color": "#5af22f",
+  "background_color": "#3b3a38"
 }
