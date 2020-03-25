@@ -1,10 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import logo from "./assets/images/logo.svg";
 import "./style/App.css";
 import GitHubButton from "react-github-btn";
 import { TwitterFollowButton } from "react-twitter-embed";
+import {
+  isPushNotificationSupported,
+  initializePushNotifications,
+  sendNotification
+} from "./utils/push-notification";
 
 function App() {
+  useEffect(() => {
+    if (isPushNotificationSupported()) {
+      initializePushNotifications().then(consent => {
+        if (consent === "granted") {
+          sendNotification();
+        }
+      });
+    }
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
