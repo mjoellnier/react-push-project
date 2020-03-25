@@ -1,3 +1,6 @@
+const pushServerPublicKey =
+  "BLN0oNeI3RI2PAdGHU963MhGp0YV-1F0nl1-l6b9lE2OlUd0wxknTHEk5Ts477x9DFymWNY0vx61ZCTtmhhlqVs";
+
 /**
  * checks if Push notification and service workers are supported by your browser
  */
@@ -14,6 +17,7 @@ export const initializePushNotifications = () => {
     return result;
   });
 };
+
 /**
  * shows a notification
  */
@@ -38,5 +42,52 @@ export const sendNotification = () => {
   };
   navigator.serviceWorker.ready.then(function(serviceWorker) {
     serviceWorker.showNotification(title, options);
+  });
+};
+
+const urlBase64ToUint8Array = base64String => {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+};
+
+/**
+ *
+ * using the registered service worker creates a push notification subscription and returns it
+ *
+ */
+export const createNotificationSubscription = async () => {
+  //wait for service worker installation to be ready, and then
+  return await navigator.serviceWorker.ready.then(serviceWorker => {
+    // subscribe and return the subscription
+    return serviceWorker.pushManager
+      .subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(pushServerPublicKey)
+      })
+      .then(subscription => {
+        console.log("User is subscribed.", subscription);
+        return subscription;
+      });
+  });
+};
+
+export const registerClientToPushServer = (id, subscription) => {
+  // fetch(`push-server/user/${id}/push-subscription`, {
+  fetch(`https://test.watermelon-solutions.de/api/push-service/subscribe`, {
+    headers: {
+      "content-type": "application/json;charset=UTF-8",
+      "sec-fetch-mode": "cors"
+    },
+    body: JSON.stringify(subscription),
+    method: "POST",
+    mode: "cors"
   });
 };

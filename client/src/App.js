@@ -6,7 +6,9 @@ import { TwitterFollowButton } from "react-twitter-embed";
 import {
   isPushNotificationSupported,
   initializePushNotifications,
-  sendNotification
+  sendNotification,
+  createNotificationSubscription,
+  registerClientToPushServer
 } from "./utils/push-notification";
 
 function App() {
@@ -17,6 +19,10 @@ function App() {
           sendNotification();
         }
       });
+      console.log("Registering to the server!");
+      createNotificationSubscription().then(sub =>
+        registerClientToPushServer("id", sub)
+      );
     }
   }, []);
 

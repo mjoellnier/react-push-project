@@ -4,6 +4,7 @@ const buildSW = () => {
   return workboxBuild.generateSW({
     swDest: "build/sw.js",
     clientsClaim: true,
+    importScripts: ["./pushHandler.js"],
     skipWaiting: true,
     globDirectory: "build",
     globIgnores: ["**/service-worker.js", "**precache-manifest**"],
@@ -24,3 +25,5 @@ const buildSW = () => {
 };
 
 buildSW();
+
+// importScripts: "./pushHandler.js",
