@@ -41,7 +41,7 @@ self.__precacheManifest = [
   },
   {
     "url": "pushHandler.js",
-    "revision": "e8e1f3af4e07af1694e7158223782f67"
+    "revision": "681253f11bbd15e69626cda61ff50f26"
   },
   {
     "url": "static/css/main.9e630a28.chunk.css",
