@@ -40,6 +40,10 @@ self.__precacheManifest = [
     "revision": "e4fa7e8905845295be76901c571332f8"
   },
   {
+    "url": "pushHandler.js",
+    "revision": "e8e1f3af4e07af1694e7158223782f67"
+  },
+  {
     "url": "static/css/main.9e630a28.chunk.css",
     "revision": "90832bc1e9ada2da1cf0add3d09e723d"
   },
