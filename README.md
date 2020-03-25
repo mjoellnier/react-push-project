@@ -9,9 +9,11 @@ The client project contains a installable ReactJS PWA that triggers a automatic 
 ## Client Screenshots
 
 **Message notification on installed PWA icon**
+
 ![icon_message]
 
 **Push message in notification central (Android)**
+
 ![message_central]
 
 [icon_message]: ./docs/images/icon_message.png
