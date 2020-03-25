@@ -2,8 +2,3 @@ version: "3.7"
 services:
   push-service:
     image: test/push-server:latest
-    networks:
-      - watermelonnet
-networks:
-  watermelonnet:
-    name: watermelon_network
