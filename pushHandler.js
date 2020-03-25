@@ -1,6 +1,4 @@
 self.addEventListener("push", event => {
-  console.log("[Service Worker] Push Received.");
-
   const { image, url, title, text, icon } = event.data.json();
 
   const options = {
