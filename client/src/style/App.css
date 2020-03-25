@@ -7,6 +7,23 @@
   pointer-events: none;
 }
 
+.socialBanner {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding-top: 5%;
+}
+
+a {
+  text-decoration: none;
+  color: #5af22f;
+  transition: all 500ms ease-in-out;
+}
+
+a:hover {
+  color: #42972a;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
