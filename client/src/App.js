@@ -8,10 +8,15 @@ import {
   initializePushNotifications,
   sendNotification,
   createNotificationSubscription,
-  registerClientToPushServer
+  registerClientToPushServer,
+  sendPushMessageViaServer
 } from "./utils/push-notification";
 
 function App() {
+  const [clientKey, setClientKey] = useState();
+  const [notificationTitle, setNotificationTitle] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState("");
+
   useEffect(() => {
     if (isPushNotificationSupported()) {
       initializePushNotifications().then(consent => {
@@ -19,10 +24,9 @@ function App() {
           sendNotification();
         }
       });
-      console.log("Registering to the server!");
-      createNotificationSubscription().then(sub =>
-        registerClientToPushServer("id", sub)
-      );
+      createNotificationSubscription().then(sub => {
+        registerClientToPushServer(sub).then(key => setClientKey(key));
+      });
     }
   }, []);
 
@@ -40,6 +44,36 @@ function App() {
             React Push Project
           </a>
         </p>
+        <div id="notification-form-wrapper">
+          <form id="notification-form" action="submit">
+            <input
+              className="input-field"
+              placeholder="Notification-Title"
+              maxLength={50}
+              value={notificationTitle}
+              onChange={target => setNotificationTitle(target.target.value)}
+            />
+            <input
+              className="input-field"
+              placeholder="Notification-Message"
+              maxLength={200}
+              value={notificationMessage}
+              onChange={target => setNotificationMessage(target.target.value)}
+            />
+            <input
+              type="button"
+              value="SEND!"
+              className="send-button"
+              onClick={() =>
+                sendPushMessageViaServer({
+                  user: clientKey,
+                  title: notificationTitle,
+                  message: notificationMessage
+                })
+              }
+            />
+          </form>
+        </div>
         <div className="socialBanner">
           <TwitterFollowButton screenName={"coding_max"} />
           <GitHubButton

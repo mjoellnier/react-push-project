@@ -65,29 +65,52 @@ const urlBase64ToUint8Array = base64String => {
  */
 export const createNotificationSubscription = async () => {
   //wait for service worker installation to be ready, and then
-  return await navigator.serviceWorker.ready.then(serviceWorker => {
-    // subscribe and return the subscription
-    return serviceWorker.pushManager
-      .subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(pushServerPublicKey)
-      })
-      .then(subscription => {
-        console.log("User is subscribed.", subscription);
-        return subscription;
-      });
-  });
+  return await navigator.serviceWorker.ready
+    .then(serviceWorker => {
+      // subscribe and return the subscription
+      return serviceWorker.pushManager
+        .subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(pushServerPublicKey)
+        })
+        .then(subscription => {
+          return subscription;
+        });
+    })
+    .catch(error =>
+      console.warn("error during notification subscription: ", error)
+    );
 };
 
-export const registerClientToPushServer = (id, subscription) => {
-  // fetch(`push-server/user/${id}/push-subscription`, {
-  fetch(`https://test.watermelon-solutions.de/api/push-service/subscribe`, {
+/**
+ * Calls the remote server to register this client to the notification api.
+ * Gets its key from the server.
+ */
+export const registerClientToPushServer = async subscription => {
+  return await fetch(
+    `https://test.watermelon-solutions.de/api/push-service/subscribe`,
+    {
+      headers: {
+        "content-type": "application/json;charset=UTF-8",
+        "sec-fetch-mode": "cors"
+      },
+      body: JSON.stringify(subscription),
+      method: "POST",
+      mode: "cors"
+    }
+  )
+    .then(response => response.json())
+    .then(result => result.id);
+};
+
+export const sendPushMessageViaServer = payload => {
+  fetch(`https://test.watermelon-solutions.de/api/push-service/send`, {
     headers: {
-      "content-type": "application/json;charset=UTF-8",
-      "sec-fetch-mode": "cors"
+      "Content-Type": "application/json",
+      mode: "cors"
     },
-    body: JSON.stringify(subscription),
+    body: JSON.stringify(payload),
     method: "POST",
     mode: "cors"
-  });
+  }).catch(error => console.log("Error during push message sending: ", error));
 };

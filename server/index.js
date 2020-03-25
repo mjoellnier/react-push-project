@@ -4,7 +4,15 @@ const express = require("express");
 const webPush = require("web-push");
 const bodyParser = require("body-parser");
 const path = require("path");
+var crypto = require("crypto");
+const subs = {};
 var cors = require("cors");
+
+const createHash = input => {
+  const md5sum = crypto.createHash("md5");
+  md5sum.update(Buffer.from(input));
+  return md5sum.digest("hex");
+};
 
 const app = express();
 
@@ -23,28 +31,33 @@ webPush.setVapidDetails(
 );
 
 app.get("/test", function(req, res) {
-  console.log("Test request incoming: ", req);
   res.send("I'm working!");
 });
 
 app.post("/subscribe", (req, res) => {
-  console.log("Incoming subscription body:", req.body);
-  const subscription = req.body;
+  let key = createHash(JSON.stringify(req.body));
+  subs[key] = req.body;
+  res.status(201).send({ id: key });
+});
 
-  res.status(201).json({});
-
+app.post("/send", (req, res) => {
   const payload = JSON.stringify({
-    title: "Push notifications with Service Workers",
-    text: "HEY - I'm from the server! 🍉"
+    title: req.body.title,
+    text: req.body.message,
+    icon: "/react-push-project/logo192.png"
   });
-
-  webPush
-    .sendNotification(subscription, payload)
-    .then(
-      fullfilled => console.log("Fullfilled!", fullfilled),
-      rejected => console.log("Rejected!", rejected)
-    )
-    .catch(error => console.error("Error!", error));
+  if (subs[req.body.user]) {
+    webPush
+      .sendNotification(subs[req.body.user], payload)
+      .then(
+        fullfilled => console.log("Fullfilled!", fullfilled),
+        rejected => console.log("Rejected!", rejected)
+      )
+      .catch(error => console.error("Error!", error));
+    res.status(200);
+  } else {
+    res.status(418);
+  }
 });
 
 app.set("port", process.env.PORT || 80);

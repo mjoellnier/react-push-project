@@ -3,7 +3,7 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 15vmin;
   pointer-events: none;
 }
 
@@ -52,4 +52,32 @@ a:hover {
   to {
     transform: rotate(360deg);
   }
+}
+
+#notification-form-wrapper {
+  width: 65%;
+}
+
+#notification-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-field {
+  background: none;
+  border: none;
+  box-shadow: none;
+  border-bottom: 1px solid #5af22f;
+  color: white;
+  margin-bottom: 25px;
+  font-size: 100%;
+}
+
+.send-button {
+  padding: 15px;
+  background: none;
+  border: 1px solid #5af22f;
+  color: #5af22f;
+  font-size: 90%;
+  cursor: pointer;
 }
